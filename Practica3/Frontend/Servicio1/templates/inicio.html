@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis mascotas</title>
+    <!-- Estilos en línea -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            margin-left: 20px; /* Agregar margen izquierdo */
+        }
+    
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f8bbd0; /* Cambiar color de fondo a rosa pastel */
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    
+        input[type="file"],
+        button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border: none;
+            background-color: #ba68c8; /* Cambiar color de botones a morado pastel */
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    
+        button {
+            background-color: #9575cd; /* Cambiar color de botón especial a tono más claro de morado */
+        }
+    
+        button:hover {
+            background-color: #7e57c2; /* Cambiar color de botón al pasar el mouse a un tono más oscuro de morado */
+        }
+    
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <form id="myForm" method="POST">
+        {% csrf_token %}
+    </form>
+    <br>
+    <input type="file" id="cargarArchivo_archivo" accept=".xml"><br>
+    <button onclick="cargarArchivo()">Cargar Archivo</button>
+    <br>
+    <br>
+    <button onclick="limpiarDatos()">Limpiar Datos</button>
+    <br>
+    <br>
+    <br>
+    <button onclick="procesarArchivos()">Procesar Archivo</button>
+    <br>
+    <br>
+    <br>
+    <button onclick="datosEstudiantiles()">Datos estudiantiles</button>
+    <br>
+    <br>
+    <br>
+    <div id="result"></div>
+
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+                }
+              }
+            }
+            return cookieValue;
+          }
+        function cargarArchivo(){
+            document.getElementById('result').innerHTML = ""
+            var fileInput = document.getElementById('cargarArchivo_archivo');
+            var file = fileInput.files[0];
+            if (!file) {
+                alert('Por favor, seleccione un archivo XML.');
+                return;
+            }
+            var formData = new FormData();
+            formData.append('xml_file', file);
+            var csrftoken = getCookie('csrftoken');
+            console.log(csrftoken);
+            fetch('cargarArchivo/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken  // Include the CSRF token in the headers
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en servidor DJango');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data)
+                data = data.resultados
+                if (data.estado === "error"){
+                    alert(data.mensaje)
+                } else {
+                    alert("Datos creados/actualizados con éxito")
+                    console.log(data)
+                }
+            })
+            .catch(error => {
+                alert(error);
+                console.error('Error:', error);
+            });
+        }
+        function limpiarDatos(){
+            document.getElementById('result').innerHTML = ""
+            fetch('limpiarDatos/')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en servidor DJango');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data)
+                data = data.resultados
+                if (data.estado === "error"){
+                    alert(data.mensaje)
+                } else {
+                    alert("Datos reseteados")
+                }
+            })
+            .catch(error => {
+                alert(error);
+                console.error('Error:', error);
+            });
+        }  
+        function procesarArchivos(){
+            document.getElementById('result').innerHTML = ""
+            fetch('procesarArchivos/')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en servidor DJango');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data)
+                
+                document.getElementById('result').innerHTML = '<xmp>' + data['xml'] + '</xmp>';
+            })
+            .catch(error => {
+                alert(error);
+                console.error('Error:', error);
+            });
+        }
+        function datosEstudiantiles(){
+            document.getElementById('result').innerHTML = `
+            <p>Nombre: Maria Paola Guadalúpe Dávila Valenzuela</p>
+            <p>Carnet: 202200220</p>
+            `;
+        } 
+    </script>
+</body>
+</html>

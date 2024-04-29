@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ingresoAnimales>
+    <perro>
+        <edad>Ab1542</edad>
+        <raza>Paola</raza>
+    </perro>
+    <gato>
+        <edad>Ab1542</edad>
+        <raza>Paola</raza>
+    </gato>
+    <conejo>
+        <edad>Ab1542</edad>
+        <raza>Paola</raza>
+    </conejo>
+    <rata>
+        <edad>Ab1542</edad>
+        <raza>Paola</raza>
+    </rata>
+    <conejo>
+        <edad>Ab1542</edad>
+        <raza>Paola</raza>
+    </conejo>
+    <perro>
+        <edad>Ab1542</edad>
+        <raza>Paola</raza>
+    </perro>
+</ingresoAnimales>
