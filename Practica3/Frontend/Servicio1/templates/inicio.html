@@ -10,7 +10,9 @@
             background-color: #f0f0f0;
             margin: 0;
             padding: 0;
-            margin-left: 20px; /* Agregar margen izquierdo */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centra el contenido horizontalmente */
         }
     
         .container {
@@ -47,6 +49,9 @@
     </style>
 </head>
 <body>
+    <div class="container">
+        <img src="https://revista.condusef.gob.mx/wp-content/uploads/2023/03/mascotas_276.jpg" alt="Imagen de mascotas" width="400">
+    </div>
     <form id="myForm" method="POST">
         {% csrf_token %}
     </form>
